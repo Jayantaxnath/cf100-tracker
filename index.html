@@ -4,214 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>100 Codeforces Questions for Beginners</title>
-  <style>
-    :root {
-      --bg: #e8eef9;
-      --bg-deep: #d8e4f6;
-      --card: #ffffff;
-      --text: #24334a;
-      --muted: #566781;
-      --cf-blue: #2f5b96;
-      --cf-blue-dark: #1f3f6b;
-      --cf-orange: #f6a623;
-      --cf-orange-dark: #db8b10;
-      --border: #c6d3e8;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Verdana, Arial, sans-serif;
-      color: var(--text);
-      background:
-        linear-gradient(180deg, var(--bg-deep) 0%, var(--bg) 20%, #f2f6fd 100%);
-      line-height: 1.5;
-    }
-
-    .container {
-      max-width: 1180px;
-      margin: 20px auto;
-      padding: 0 16px 40px;
-    }
-
-    .hero, .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
-    }
-
-    .hero {
-      padding: 18px 20px 16px;
-      margin-bottom: 14px;
-      border-top: 5px solid var(--cf-blue);
-      position: relative;
-    }
-
-    h1 {
-      margin: 0 0 8px;
-      font-size: 28px;
-      color: var(--cf-blue-dark);
-      letter-spacing: 0.2px;
-    }
-
-    .cf-badge {
-      display: inline-block;
-      margin-bottom: 8px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.4px;
-      text-transform: uppercase;
-      color: var(--cf-blue-dark);
-      background: #edf3ff;
-      border: 1px solid #c9d8f4;
-    }
-
-    .subtitle {
-      margin: 0;
-      color: var(--muted);
-    }
-
-    .toolbar {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-      align-items: center;
-    }
-
-    button {
-      border-radius: 8px;
-      padding: 10px 14px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 5px 12px rgba(47, 91, 150, 0.15);
-    }
-
-    #resetProgress {
-      background: #fff3e1;
-      color: #8a5700;
-      border: 1px solid #f3d29f;
-    }
-
-    #exportProgress {
-      background: #eff6ff;
-      color: var(--cf-blue-dark);
-      border: 1px solid #c5d8fa;
-    }
-
-    .progress {
-      font-weight: 700;
-      color: var(--cf-blue);
-      background: #eef5ff;
-      border: 1px solid #c6d8f4;
-      border-radius: 8px;
-      padding: 8px 10px;
-    }
-
-    .card {
-      padding: 12px;
-      overflow-x: auto;
-      border-top: 4px solid var(--cf-orange);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 940px;
-    }
-
-    th, td {
-      border: 1px solid var(--border);
-      padding: 8px;
-      text-align: left;
-      vertical-align: middle;
-      font-size: 14px;
-    }
-
-    th {
-      background: #f1f6ff;
-      color: var(--cf-blue-dark);
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-
-    tr:nth-child(even) td {
-      background: #fbfdff;
-    }
-
-    tr:hover td {
-      background: #f3f8ff;
-    }
-
-    a {
-      color: var(--cf-blue);
-      text-decoration: none;
-    }
-
-    a:hover {
-      color: var(--cf-orange-dark);
-      text-decoration: underline;
-    }
-
-    td:last-child, th:last-child {
-      text-align: center;
-      width: 90px;
-    }
-
-    input[type='checkbox'] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--cf-blue);
-      cursor: pointer;
-    }
-
-    .footer {
-      margin-top: 16px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .footer a { color: var(--cf-blue-dark); }
-
-    @media (max-width: 768px) {
-      .container {
-        margin-top: 10px;
-      }
-
-      h1 {
-        font-size: 24px;
-      }
-
-      .hero {
-        padding: 16px;
-      }
-
-      .toolbar {
-        gap: 8px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
     <section class="hero">
-      <span class="cf-badge">Codeforces Theme</span>
-      <h1>100 Questions of Codeforces Tracker</h1>
+      <img style="height: 50px;" class="sponsor-logo" src="https://codeforces.com/codeforces.org/s/40896/images/codeforces-sponsored-by-ton.png" alt="Codeforces sponsored by TON">
+      <!-- <span class="cf-badge">Codeforces Theme</span> -->
+      <h1>CF100 Tracker | Codeforces Beginner Sheet</h1>
       <p class="subtitle">Tick solved problems and track your progress. Your checked items are saved in the browser.</p>
       <div class="toolbar">
         <span id="progressText" class="progress">Solved: 0 / 100</span>
-        <button id="exportProgress" type="button">Export Solved IDs</button>
-        <button id="resetProgress" type="button">Reset All Ticks</button>
+        <button id="pickRandomQuestion" type="button">Pick Random Question</button>
+        <button id="showUnsolvedProblems" type="button">Show Unsolved Problems</button>
       </div>
     </section>
 
@@ -1027,11 +832,32 @@
 </tr>
 </table>
     </section>
-
     <p class="footer">
       Beginner list reference and original idea credit:
       <a href="https://github.com/ankitvashisht12/100-questions-of-codeforces" target="_blank" rel="noopener noreferrer">ankitvashisht12/100-questions-of-codeforces</a>
     </p>
+  </div>
+
+  <div id="randomQuestionModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="randomTitle">
+    <div class="modal-panel">
+      <h3 id="randomTitle">Your Random Question</h3>
+      <p id="randomQuestionText" class="modal-text"></p>
+      <div class="modal-actions">
+        <a id="openRandomLink" class="modal-btn primary" href="#" target="_blank" rel="noopener noreferrer">Open Problem</a>
+        <button id="closeRandomModal" class="modal-btn" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="unsolvedModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="unsolvedTitle">
+    <div class="modal-panel modal-wide">
+      <h3 id="unsolvedTitle">Unsolved Problems</h3>
+      <p id="unsolvedSummary" class="modal-text"></p>
+      <ul id="unsolvedList" class="unsolved-list"></ul>
+      <div class="modal-actions">
+        <button id="closeUnsolvedModal" class="modal-btn" type="button">Close</button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -1039,8 +865,16 @@
       const STORAGE_KEY = 'cf100_solved_v1';
       const checkboxes = Array.from(document.querySelectorAll('table tr td input[type="checkbox"]'));
       const progressText = document.getElementById('progressText');
-      const resetButton = document.getElementById('resetProgress');
-      const exportButton = document.getElementById('exportProgress');
+      const randomButton = document.getElementById('pickRandomQuestion');
+      const unsolvedButton = document.getElementById('showUnsolvedProblems');
+      const randomModal = document.getElementById('randomQuestionModal');
+      const randomQuestionText = document.getElementById('randomQuestionText');
+      const openRandomLink = document.getElementById('openRandomLink');
+      const closeRandomModal = document.getElementById('closeRandomModal');
+      const unsolvedModal = document.getElementById('unsolvedModal');
+      const unsolvedSummary = document.getElementById('unsolvedSummary');
+      const unsolvedList = document.getElementById('unsolvedList');
+      const closeUnsolvedModal = document.getElementById('closeUnsolvedModal');
 
       function getRowIdFromCheckbox(checkbox) {
         const row = checkbox.closest('tr');
@@ -1048,6 +882,22 @@
         const idCell = row.querySelector('td');
         if (!idCell) return null;
         return idCell.textContent.trim();
+      }
+
+      function getRowTitleFromCheckbox(checkbox) {
+        const row = checkbox.closest('tr');
+        if (!row) return '';
+        const titleAnchor = row.querySelector('td:nth-child(2) a');
+        if (!titleAnchor) return '';
+        return titleAnchor.textContent.trim();
+      }
+
+      function getRowProblemLinkFromCheckbox(checkbox) {
+        const row = checkbox.closest('tr');
+        if (!row) return '';
+        const titleAnchor = row.querySelector('td:nth-child(2) a');
+        if (!titleAnchor) return '';
+        return titleAnchor.getAttribute('href') || '';
       }
 
       function loadState() {
@@ -1070,6 +920,22 @@
         progressText.textContent = 'Solved: ' + solved + ' / ' + checkboxes.length;
       }
 
+      function openModal() {
+        randomModal.classList.remove('hidden');
+      }
+
+      function closeModal() {
+        randomModal.classList.add('hidden');
+      }
+
+      function openUnsolvedModal() {
+        unsolvedModal.classList.remove('hidden');
+      }
+
+      function closeUnsolved() {
+        unsolvedModal.classList.add('hidden');
+      }
+
       const state = loadState();
       checkboxes.forEach((cb) => {
         const rowId = getRowIdFromCheckbox(cb);
@@ -1084,28 +950,107 @@
         });
       });
 
-      resetButton.addEventListener('click', function () {
-        if (!confirm('Reset all solved ticks?')) return;
-        checkboxes.forEach(cb => { cb.checked = false; });
-        saveState({});
-        updateProgress();
+      randomButton.addEventListener('click', function () {
+        const unsolved = checkboxes.filter(cb => !cb.checked);
+        const source = unsolved.length > 0 ? unsolved : checkboxes;
+        const pick = source[Math.floor(Math.random() * source.length)];
+        if (!pick) return;
+
+        const row = pick.closest('tr');
+        const rowId = getRowIdFromCheckbox(pick);
+        const rowTitle = getRowTitleFromCheckbox(pick);
+        const link = row ? row.querySelector('td:nth-child(2) a') : null;
+
+        if (row) {
+          row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          row.style.outline = '2px solid #f6a623';
+          setTimeout(function () { row.style.outline = ''; }, 1800);
+        }
+
+        if (link && link.href) {
+          randomQuestionText.textContent = '#' + rowId + ' - ' + rowTitle;
+          openRandomLink.href = link.href;
+          openRandomLink.classList.remove('disabled');
+          openModal();
+        } else {
+          randomQuestionText.textContent = '#' + rowId + ' - ' + rowTitle + ' (Problem link not available)';
+          openRandomLink.href = '#';
+          openRandomLink.classList.add('disabled');
+          openModal();
+        }
       });
 
-      exportButton.addEventListener('click', function () {
-        const solvedIds = checkboxes
-          .filter(cb => cb.checked)
-          .map(cb => getRowIdFromCheckbox(cb))
-          .filter(Boolean);
-        const text = solvedIds.join(', ');
-        if (text.length === 0) {
-          alert('No solved IDs to export yet.');
+      closeRandomModal.addEventListener('click', closeModal);
+
+      closeUnsolvedModal.addEventListener('click', closeUnsolved);
+
+      randomModal.addEventListener('click', function (event) {
+        if (event.target === randomModal) {
+          closeModal();
+        }
+      });
+
+      unsolvedModal.addEventListener('click', function (event) {
+        if (event.target === unsolvedModal) {
+          closeUnsolved();
+        }
+      });
+
+      document.addEventListener('keydown', function (event) {
+        if (event.key !== 'Escape') return;
+        if (!randomModal.classList.contains('hidden')) {
+          closeModal();
+        }
+        if (!unsolvedModal.classList.contains('hidden')) {
+          closeUnsolved();
+        }
+      });
+
+      unsolvedButton.addEventListener('click', function () {
+        const unsolved = checkboxes
+          .filter(cb => !cb.checked)
+          .map(cb => ({
+            id: getRowIdFromCheckbox(cb),
+            title: getRowTitleFromCheckbox(cb),
+            link: getRowProblemLinkFromCheckbox(cb)
+          }))
+          .filter(item => item.id);
+
+        unsolved.sort(function (a, b) {
+          return Number(a.id) - Number(b.id);
+        });
+
+        unsolvedList.innerHTML = '';
+
+        if (unsolved.length === 0) {
+          unsolvedSummary.textContent = 'Awesome! All 100 questions are solved.';
+          const li = document.createElement('li');
+          li.textContent = 'No unsolved problems left.';
+          unsolvedList.appendChild(li);
+          openUnsolvedModal();
           return;
         }
-        navigator.clipboard.writeText(text).then(function () {
-          alert('Copied solved IDs to clipboard: ' + text);
-        }).catch(function () {
-          alert('Solved IDs: ' + text);
+
+        unsolvedSummary.textContent = 'You have ' + unsolved.length + ' unsolved problem(s).';
+
+        unsolved.forEach(function (item) {
+          const li = document.createElement('li');
+
+          if (item.link) {
+            const a = document.createElement('a');
+            a.href = item.link;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.textContent = item.id + ' - ' + item.title;
+            li.appendChild(a);
+          } else {
+            li.textContent = item.id + ' - ' + item.title + ' (link unavailable)';
+          }
+
+          unsolvedList.appendChild(li);
         });
+
+        openUnsolvedModal();
       });
 
       updateProgress();
