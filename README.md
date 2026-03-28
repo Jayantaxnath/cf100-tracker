@@ -5,4 +5,5 @@ Open https://jayantaxnath.github.io/cf100-tracker/ to use it.
 
 ![alt text](image.png)
 
-Credit: https://github.com/ankitvashisht12/100-questions-of-codeforces
+Codeforces Tracker © 2026
+Developed for competitive programming enthusiasts.

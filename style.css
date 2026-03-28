@@ -175,12 +175,18 @@ input[type='checkbox'] {
 }
 
 .footer {
+    display: flex;
+    align-items: center;
     margin-top: 16px;
     color: var(--muted);
     font-size: 14px;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
 
 .footer a {
+    justify-content: center;
     color: var(--cf-blue-dark);
 }
 

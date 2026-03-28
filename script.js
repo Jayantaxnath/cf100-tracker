@@ -1,7 +1,5 @@
-
 (function () {
     const STORAGE_KEY = 'cf100_solved_v1';
-    const checkboxes = Array.from(document.querySelectorAll('table tr td input[type="checkbox"]'));
     const progressText = document.getElementById('progressText');
     const randomButton = document.getElementById('pickRandomQuestion');
     const unsolvedButton = document.getElementById('showUnsolvedProblems');
@@ -13,30 +11,31 @@
     const unsolvedSummary = document.getElementById('unsolvedSummary');
     const unsolvedList = document.getElementById('unsolvedList');
     const closeUnsolvedModal = document.getElementById('closeUnsolvedModal');
+    
+    const tbody = document.getElementById('problemsBody');
 
-    function getRowIdFromCheckbox(checkbox) {
-        const row = checkbox.closest('tr');
-        if (!row) return null;
-        const idCell = row.querySelector('td');
-        if (!idCell) return null;
-        return idCell.textContent.trim();
+    // Parse the CSV data from cf_sheet.js
+    function parseCSV(csv) {
+        const lines = csv.trim().split('\n');
+        const headers = lines[0].split(',');
+        const result = [];
+        
+        for (let i = 1; i < lines.length; i++) {
+            if (!lines[i]) continue;
+            // Match commas that are not inside quotes
+            const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(col => {
+                return col.replace(/^"|"$/g, '').trim();
+            });
+            const obj = {};
+            headers.forEach((h, j) => {
+                obj[h.trim()] = row[j];
+            });
+            result.push(obj);
+        }
+        return result;
     }
 
-    function getRowTitleFromCheckbox(checkbox) {
-        const row = checkbox.closest('tr');
-        if (!row) return '';
-        const titleAnchor = row.querySelector('td:nth-child(2) a');
-        if (!titleAnchor) return '';
-        return titleAnchor.textContent.trim();
-    }
-
-    function getRowProblemLinkFromCheckbox(checkbox) {
-        const row = checkbox.closest('tr');
-        if (!row) return '';
-        const titleAnchor = row.querySelector('td:nth-child(2) a');
-        if (!titleAnchor) return '';
-        return titleAnchor.getAttribute('href') || '';
-    }
+    const problemsData = parseCSV(csvData);
 
     function loadState() {
         try {
@@ -53,143 +52,160 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
+    const state = loadState();
+    const checkboxes = [];
+
     function updateProgress() {
         const solved = checkboxes.filter(cb => cb.checked).length;
-        progressText.textContent = 'Solved: ' + solved + ' / ' + checkboxes.length;
+        progressText.textContent = `Solved: ${solved} / ${problemsData.length}`;
     }
 
-    function openModal() {
-        randomModal.classList.remove('hidden');
+    function openModal(modal) {
+        modal.classList.remove('hidden');
     }
 
-    function closeModal() {
-        randomModal.classList.add('hidden');
+    function closeModal(modal) {
+        modal.classList.add('hidden');
     }
 
-    function openUnsolvedModal() {
-        unsolvedModal.classList.remove('hidden');
-    }
-
-    function closeUnsolved() {
-        unsolvedModal.classList.add('hidden');
-    }
-
-    const state = loadState();
-    checkboxes.forEach((cb) => {
-        const rowId = getRowIdFromCheckbox(cb);
-        if (rowId && state[rowId] === true) cb.checked = true;
-
-        cb.addEventListener('change', function () {
-            const id = getRowIdFromCheckbox(cb);
-            if (!id) return;
-            state[id] = cb.checked;
+    // Render table with columns: ID, Problem Name, Rating, Solved Count, Solution, Solved
+    problemsData.forEach((problem) => {
+        const tr = document.createElement('tr');
+        
+        // 1. ID (s_no)
+        const tdId = document.createElement('td');
+        tdId.textContent = problem.s_no;
+        tr.appendChild(tdId);
+        
+        // 2. Problem Name (link)
+        const tdName = document.createElement('td');
+        if (problem.link) {
+            const a = document.createElement('a');
+            a.href = problem.link;
+            a.target = '_blank';
+            a.textContent = problem.name;
+            tdName.appendChild(a);
+        } else {
+            tdName.textContent = problem.name;
+        }
+        tr.appendChild(tdName);
+        
+        // 3. Rating
+        const tdRating = document.createElement('td');
+        tdRating.textContent = problem.rating;
+        tr.appendChild(tdRating);
+        
+        // 4. Solved Count
+        const tdSolvedCount = document.createElement('td');
+        tdSolvedCount.textContent = problem.solvedCount;
+        tr.appendChild(tdSolvedCount);
+        
+        // 5. Solution (Empty link for now)
+        const tdSol = document.createElement('td');
+        const solLink = document.createElement('a');
+        solLink.href = '#';
+        solLink.textContent = 'Code';
+        tdSol.appendChild(solLink);
+        tr.appendChild(tdSol);
+        
+        // 6. Solved (Checkbox)
+        const tdSolved = document.createElement('td');
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.setAttribute('aria-label', 'Mark as solved');
+        cb.dataset.id = problem.s_no; 
+        
+        if (state[problem.s_no]) {
+            cb.checked = true;
+        }
+        
+        cb.addEventListener('change', () => {
+            state[problem.s_no] = cb.checked;
             saveState(state);
             updateProgress();
         });
+        
+        checkboxes.push(cb);
+        tdSolved.appendChild(cb);
+        tr.appendChild(tdSolved);
+        
+        // Save reference to row for random scrolling
+        problem.rowElement = tr;
+        
+        tbody.appendChild(tr);
     });
+    
+    updateProgress();
 
     randomButton.addEventListener('click', function () {
-        const unsolved = checkboxes.filter(cb => !cb.checked);
-        const source = unsolved.length > 0 ? unsolved : checkboxes;
+        const unsolved = problemsData.filter(p => !state[p.s_no]);
+        const source = unsolved.length > 0 ? unsolved : problemsData;
         const pick = source[Math.floor(Math.random() * source.length)];
         if (!pick) return;
 
-        const row = pick.closest('tr');
-        const rowId = getRowIdFromCheckbox(pick);
-        const rowTitle = getRowTitleFromCheckbox(pick);
-        const link = row ? row.querySelector('td:nth-child(2) a') : null;
-
-        if (row) {
-            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            row.style.outline = '2px solid #f6a623';
-            setTimeout(function () { row.style.outline = ''; }, 1800);
+        if (pick.rowElement) {
+            pick.rowElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            pick.rowElement.style.outline = '2px solid #f6a623';
+            setTimeout(() => { pick.rowElement.style.outline = ''; }, 1800);
         }
 
-        if (link && link.href) {
-            randomQuestionText.textContent = '#' + rowId + ' - ' + rowTitle;
-            openRandomLink.href = link.href;
+        if (pick.link) {
+            randomQuestionText.textContent = `#${pick.s_no} - ${pick.name}`;
+            openRandomLink.href = pick.link;
             openRandomLink.classList.remove('disabled');
-            openModal();
         } else {
-            randomQuestionText.textContent = '#' + rowId + ' - ' + rowTitle + ' (Problem link not available)';
+            randomQuestionText.textContent = `#${pick.s_no} - ${pick.name} (Problem link not available)`;
             openRandomLink.href = '#';
             openRandomLink.classList.add('disabled');
-            openModal();
         }
+        openModal(randomModal);
     });
 
-    closeRandomModal.addEventListener('click', closeModal);
+    closeRandomModal.addEventListener('click', () => closeModal(randomModal));
+    closeUnsolvedModal.addEventListener('click', () => closeModal(unsolvedModal));
 
-    closeUnsolvedModal.addEventListener('click', closeUnsolved);
-
-    randomModal.addEventListener('click', function (event) {
-        if (event.target === randomModal) {
-            closeModal();
-        }
+    randomModal.addEventListener('click', (event) => {
+        if (event.target === randomModal) closeModal(randomModal);
     });
 
-    unsolvedModal.addEventListener('click', function (event) {
-        if (event.target === unsolvedModal) {
-            closeUnsolved();
-        }
+    unsolvedModal.addEventListener('click', (event) => {
+        if (event.target === unsolvedModal) closeModal(unsolvedModal);
     });
 
-    document.addEventListener('keydown', function (event) {
+    document.addEventListener('keydown', (event) => {
         if (event.key !== 'Escape') return;
-        if (!randomModal.classList.contains('hidden')) {
-            closeModal();
-        }
-        if (!unsolvedModal.classList.contains('hidden')) {
-            closeUnsolved();
-        }
+        if (!randomModal.classList.contains('hidden')) closeModal(randomModal);
+        if (!unsolvedModal.classList.contains('hidden')) closeModal(unsolvedModal);
     });
 
     unsolvedButton.addEventListener('click', function () {
-        const unsolved = checkboxes
-            .filter(cb => !cb.checked)
-            .map(cb => ({
-                id: getRowIdFromCheckbox(cb),
-                title: getRowTitleFromCheckbox(cb),
-                link: getRowProblemLinkFromCheckbox(cb)
-            }))
-            .filter(item => item.id);
-
-        unsolved.sort(function (a, b) {
-            return Number(a.id) - Number(b.id);
-        });
+        const unsolved = problemsData.filter(p => !state[p.s_no]);
 
         unsolvedList.innerHTML = '';
 
         if (unsolved.length === 0) {
-            unsolvedSummary.textContent = 'Awesome! All 100 questions are solved.';
+            unsolvedSummary.textContent = 'Awesome! All questions are solved.';
             const li = document.createElement('li');
             li.textContent = 'No unsolved problems left.';
             unsolvedList.appendChild(li);
-            openUnsolvedModal();
-            return;
+        } else {
+            unsolvedSummary.textContent = `You have ${unsolved.length} unsolved problem(s).`;
+            unsolved.forEach((item) => {
+                const li = document.createElement('li');
+                if (item.link) {
+                    const a = document.createElement('a');
+                    a.href = item.link;
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                    a.textContent = `${item.s_no} - ${item.name} (${item.id})`;
+                    li.appendChild(a);
+                } else {
+                    li.textContent = `${item.s_no} - ${item.name} (link unavailable)`;
+                }
+                unsolvedList.appendChild(li);
+            });
         }
 
-        unsolvedSummary.textContent = 'You have ' + unsolved.length + ' unsolved problem(s).';
-
-        unsolved.forEach(function (item) {
-            const li = document.createElement('li');
-
-            if (item.link) {
-                const a = document.createElement('a');
-                a.href = item.link;
-                a.target = '_blank';
-                a.rel = 'noopener noreferrer';
-                a.textContent = item.id + ' - ' + item.title;
-                li.appendChild(a);
-            } else {
-                li.textContent = item.id + ' - ' + item.title + ' (link unavailable)';
-            }
-
-            unsolvedList.appendChild(li);
-        });
-
-        openUnsolvedModal();
+        openModal(unsolvedModal);
     });
-
-    updateProgress();
 })();
