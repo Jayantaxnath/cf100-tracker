@@ -11,7 +11,7 @@
     const unsolvedSummary = document.getElementById('unsolvedSummary');
     const unsolvedList = document.getElementById('unsolvedList');
     const closeUnsolvedModal = document.getElementById('closeUnsolvedModal');
-    
+
     const tbody = document.getElementById('problemsBody');
 
     // Parse the CSV data from cf_sheet.js
@@ -19,7 +19,7 @@
         const lines = csv.trim().split('\n');
         const headers = lines[0].split(',');
         const result = [];
-        
+
         for (let i = 1; i < lines.length; i++) {
             if (!lines[i]) continue;
             // Match commas that are not inside quotes
@@ -71,12 +71,12 @@
     // Render table with columns: ID, Problem Name, Rating, Solved Count, Solution, Solved
     problemsData.forEach((problem) => {
         const tr = document.createElement('tr');
-        
+
         // 1. ID (s_no)
         const tdId = document.createElement('td');
         tdId.textContent = problem.s_no;
         tr.appendChild(tdId);
-        
+
         // 2. Problem Name (link)
         const tdName = document.createElement('td');
         if (problem.link) {
@@ -89,17 +89,17 @@
             tdName.textContent = problem.name;
         }
         tr.appendChild(tdName);
-        
+
         // 3. Rating
         const tdRating = document.createElement('td');
         tdRating.textContent = problem.rating;
         tr.appendChild(tdRating);
-        
+
         // 4. Solved Count
         const tdSolvedCount = document.createElement('td');
-        tdSolvedCount.textContent = problem.solvedCount;
+        tdSolvedCount.textContent = problem.solvedCount + "+";;
         tr.appendChild(tdSolvedCount);
-        
+
         // 5. Solution (Empty link for now)
         const tdSol = document.createElement('td');
         const solLink = document.createElement('a');
@@ -107,34 +107,34 @@
         solLink.textContent = 'Code';
         tdSol.appendChild(solLink);
         tr.appendChild(tdSol);
-        
+
         // 6. Solved (Checkbox)
         const tdSolved = document.createElement('td');
         const cb = document.createElement('input');
         cb.type = 'checkbox';
         cb.setAttribute('aria-label', 'Mark as solved');
-        cb.dataset.id = problem.s_no; 
-        
+        cb.dataset.id = problem.s_no;
+
         if (state[problem.s_no]) {
             cb.checked = true;
         }
-        
+
         cb.addEventListener('change', () => {
             state[problem.s_no] = cb.checked;
             saveState(state);
             updateProgress();
         });
-        
+
         checkboxes.push(cb);
         tdSolved.appendChild(cb);
         tr.appendChild(tdSolved);
-        
+
         // Save reference to row for random scrolling
         problem.rowElement = tr;
-        
+
         tbody.appendChild(tr);
     });
-    
+
     updateProgress();
 
     randomButton.addEventListener('click', function () {
